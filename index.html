@@ -6,10 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+    <style>
+      .main {
+        padding: 16px;
+      }
+    </style>
   </head>
 
   <body>
-    <button onclick="pay()">245円支払うボタン</button>
+    <div>last updated: 2021-02-26 19:03</div>
+
+    <div class="main">
+      <button onclick="pay()">245円支払うボタン</button>
+    </div>
 
     <script>
       const isIOS = window.webkit != null
