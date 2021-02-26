@@ -24,6 +24,13 @@
           .set("second", 0)
           .format("YYYY-MM-DD HH:mm:ss")
 
+        /**
+         * @returns {string} id - unique id
+         */
+        function getId() {
+          return `${Date.now()}-${Math.random().toFixed(5)}`
+        }
+
         const ooPurchaseData = {
           // login-user-id: devuser884443
           user_id: "892f088c-8259-43aa-8254-5a234ccb4e1a",
@@ -46,6 +53,7 @@
         }
 
         callSDK({
+          id: getId(),
           message: {
             amount: 245,
             currency_code: "JPY",
