@@ -1,15 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
+    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+  </head>
 
-<body>
-    hello world
-</body>
+  <body>
+    <button onclick="pay()">245円支払うボタン</button>
 
+    <script>
+      const isIOS = window.webkit != null
+      const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+
+      const pay = () => {
+        // 有効なリクエストを作るため、(なるべく) 注文可能な未来日時をセットする
+        const takeoutTime = dayjs()
+          .add(1, "day")
+          .set("hour", 12)
+          .set("minute", 0)
+          .set("second", 0)
+          .format("YYYY-MM-DD HH:mm:ss")
+        const ooPurchaseData = {
+          // login-user-id: devuser884443
+          user_id: "892f088c-8259-43aa-8254-5a234ccb4e1a",
+          shop_id: 1,
+          items: [
+            {
+              toppings: 0,
+              productId: 97,
+              quantity: 2,
+            },
+            {
+              toppings: 0,
+              productId: 8000001,
+              quantity: 1,
+            },
+          ],
+          order: {
+            takeout_time: takeoutTime,
+          },
+        }
+
+        callSDK({
+          message: {
+            amount: 245,
+            purchase_data: ooPurchaseData,
+            wallet_shop_id: WALLET_SHOP_ID,
+          },
+          topic: "ProcessPayment",
+        })
+      }
+
+      const callSDK = (payload) => {
+        if (isIOS) {
+          window.webkit.messageHandlers.GCPWebViewBridge.postMessage(payload)
+        } else {
+          window.GCPWebViewBridge.postMessage(JSON.stringify(payload))
+        }
+      }
+    </script>
+  </body>
 </html>
