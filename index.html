@@ -57,6 +57,7 @@
       }
 
       const callSDK = (payload) => {
+        console.log(payload)
         if (isIOS) {
           window.webkit.messageHandlers.GCPWebViewBridge.postMessage(payload)
         } else {
