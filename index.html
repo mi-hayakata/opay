@@ -23,6 +23,7 @@
           .set("minute", 0)
           .set("second", 0)
           .format("YYYY-MM-DD HH:mm:ss")
+
         const ooPurchaseData = {
           // login-user-id: devuser884443
           user_id: "892f088c-8259-43aa-8254-5a234ccb4e1a",
@@ -47,6 +48,7 @@
         callSDK({
           message: {
             amount: 245,
+            currency_code: "JPY",
             purchase_data: ooPurchaseData,
             wallet_shop_id: WALLET_SHOP_ID,
           },
