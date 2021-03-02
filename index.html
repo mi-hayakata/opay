@@ -47,10 +47,16 @@ ${text}`
 
       // check
       ;(() => {
-        if (window.webkit?.messageHandlers == null) {
-          addLog("window.webkit?.messageHandlers is null")
+        if (isIOS) {
+          // iOS
+          if (window.webkit?.messageHandlers == null) {
+            addLog("window.webkit?.messageHandlers is null")
+          } else {
+            addLog(stringify(window.webkit))
+          }
         } else {
-          addLog(stringify(window.webkit))
+          // Android
+          addLog(window.GCPWebViewBridge)
         }
       })()
 
