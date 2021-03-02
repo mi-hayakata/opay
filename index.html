@@ -14,15 +14,45 @@
   </head>
 
   <body>
-    <div>last updated: 2021-03-01 11:55</div>
+    <div>last updated: 2021-03-01 16:18</div>
 
     <div class="main">
       <button onclick="pay()">245円支払うボタン</button>
+      <br />
+      <br />
+      <textarea id="js_id_log" style="width: 100%; height: 80vh"></textarea>
     </div>
 
     <script>
       const isIOS = window.webkit != null
       const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+
+      const stringify = (x) => {
+        return JSON.stringify(x, (k, v) => {
+          if (typeof v === "function") {
+            return v.toString()
+          }
+          return v
+        })
+      }
+
+      const addLog = (text) => {
+        /** @type {HTMLTextAreaElement} */
+        const t = document.getElementById("js_id_log")
+        const prev = t.value
+        const next = `${prev}
+${text}`
+        t.value = next
+      }
+
+      // check
+      ;(() => {
+        if (window.webkit?.messageHandlers == null) {
+          addLog("window.webkit?.messageHandlers is null")
+        } else {
+          addLog(stringify(window.webkit))
+        }
+      })()
 
       const pay = () => {
         // 有効なリクエストを作るため、(なるべく) 注文可能な未来日時をセットする
