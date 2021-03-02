@@ -28,12 +28,16 @@
       const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
 
       const stringify = (x) => {
-        return JSON.stringify(x, (k, v) => {
-          if (typeof v === "function") {
-            return v.toString()
-          }
-          return v
-        })
+        return JSON.stringify(
+          x,
+          (k, v) => {
+            if (typeof v === "function") {
+              return v.toString()
+            }
+            return v
+          },
+          "  ",
+        )
       }
 
       const addLog = (text) => {
@@ -56,7 +60,7 @@ ${text}`
           }
         } else {
           // Android
-          addLog(window.GCPWebViewBridge)
+          addLog(stringify(window.GCPWebViewBridge))
         }
       })()
 
