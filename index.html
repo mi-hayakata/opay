@@ -14,11 +14,32 @@
   </head>
 
   <body>
-    <div>last updated: 2021-03-12 17:40</div>
+    <div>last updated: 2021-03-12 18:30</div>
 
     <div class="main">
+      <h3>決済</h3>
       <button onclick="pay()">245円支払うボタン</button>
-      <br />
+      <textarea id="js_id_result_pay" style="width: 100%; height: 160px">
+(Native から受け取った結果を表示するエリア)</textarea
+      >
+
+      <h3>キャンセル</h3>
+      <div>
+        PaymentID:
+        <input
+          type="text"
+          id="js_id_cancel_payment_id"
+          value=""
+          onfocus="this.select()"
+        />
+      </div>
+      <button onclick="cancel()">キャンセル</button>
+      <textarea id="js_id_result_cancel" style="width: 100%; height: 160px">
+(Native から受け取った結果を表示するエリア)</textarea
+      >
+
+      <h3>デバッグエリア</h3>
+      Native の実装状態を表示しています
       <br />
       <textarea id="js_id_log" style="width: 100%; height: 80vh"></textarea>
     </div>
@@ -26,6 +47,7 @@
     <script>
       const isIOS = window.webkit != null
       const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+      const OPN_BUNDLE_ID = "ooo.opn.ohsho-miniapp"
 
       const stringify = (x) => {
         return JSON.stringify(
@@ -110,7 +132,29 @@ ${text}`
             twallet_shop_id: WALLET_SHOP_ID,
           },
           topic: "ProcessOrder",
-          bundle_id: "ooo.opn.ohsho-miniapp",
+          bundle_id: OPN_BUNDLE_ID,
+        })
+      }
+
+      const cancel = () => {
+        const paymentID = document.getElementById("js_id_cancel_payment_id")
+          .value
+
+        if (paymentID == null || paymentID.trim().length === 0) {
+          document.getElementById("js_id_result_cancel").value =
+            "PaymentID を入力してください"
+          document.getElementById("js_id_cancel_payment_id").value = ""
+          return
+        }
+
+        callSDK({
+          id: getId(),
+          message: {
+            payment_id: paymentID,
+            twallet_shop_id: WALLET_SHOP_ID,
+          },
+          topic: "CancelOrder",
+          bundle_id: OPN_BUNDLE_ID,
         })
       }
 
@@ -122,6 +166,39 @@ ${text}`
           window.GCPWebViewBridge.postMessage(JSON.stringify(payload))
         }
       }
+
+      /**
+       * Native からの return の受信用
+       */
+      window.addEventListener("GCPWebViewBridge", (event) => {
+        const { detail } = event
+
+        const pElm = document.getElementById("js_id_result_pay")
+        const cElm = document.getElementById("js_id_result_cancel")
+
+        switch (detail?.topic) {
+          case "ProcessOrder":
+            pElm.value = stringify(detail)
+
+            // paymentID の自動入力
+            document.getElementById("js_id_cancel_payment_id").value =
+              detail.message.payment_id
+
+            break
+
+          case "CancelOrder":
+            cElm.value = stringify(detail)
+            break
+
+          default:
+            {
+              const m = "予期せぬエラー"
+              pElm.value = m
+              cElm.value = m
+            }
+            break
+        }
+      })
     </script>
   </body>
 </html>
