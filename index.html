@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <div>last updated: 2021-03-01 16:18</div>
+    <div>last updated: 2021-03-12 17:30</div>
 
     <div class="main">
       <button onclick="pay()">245円支払うボタン</button>
@@ -107,9 +107,10 @@ ${text}`
             amount: "245",
             currency_code: "JPY",
             purchase_data: ooPurchaseData,
-            wallet_shop_id: WALLET_SHOP_ID,
+            twallet_shop_id: WALLET_SHOP_ID,
           },
-          topic: "ProcessPayment",
+          topic: "ProcessOrder",
+          bundle_id: "ooo.opn.awesome-miniapp",
         })
       }
 
