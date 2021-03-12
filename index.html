@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <div>last updated: 2021-03-12 18:30</div>
+    <div>last updated: 2021-03-12 18:31</div>
 
     <div class="main">
       <h3>決済</h3>
@@ -86,6 +86,13 @@ ${text}`
         }
       })()
 
+      /**
+       * @returns {string} id - unique id
+       */
+      function getId() {
+        return `${Date.now()}-${Math.random().toFixed(5)}`
+      }
+
       const pay = () => {
         // 有効なリクエストを作るため、(なるべく) 注文可能な未来日時をセットする
         const takeoutTime = dayjs()
@@ -94,13 +101,6 @@ ${text}`
           .set("minute", 0)
           .set("second", 0)
           .format("YYYY-MM-DD HH:mm:ss")
-
-        /**
-         * @returns {string} id - unique id
-         */
-        function getId() {
-          return `${Date.now()}-${Math.random().toFixed(5)}`
-        }
 
         const ooPurchaseData = {
           // login-user-id: devuser884443
