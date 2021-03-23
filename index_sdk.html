@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+    <script src="./scripts/index.umd.js"></script>
+    <style>
+      .main {
+        padding: 16px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>JS SDK版</h2>
+    <div>last updated: 2021-03-23 18:45</div>
+
+    <div class="main">
+      <h3>決済</h3>
+      <button onclick="pay()">245円支払うボタン</button>
+      <textarea id="js_id_result_pay" style="width: 100%; height: 160px">
+(Native から受け取った結果を表示するエリア)</textarea
+      >
+
+      <h3>キャンセル</h3>
+      <div>
+        PaymentID:
+        <input
+          type="text"
+          id="js_id_cancel_payment_id"
+          value=""
+          onfocus="this.select()"
+        />
+      </div>
+      <button onclick="cancel()">キャンセル</button>
+      <textarea id="js_id_result_cancel" style="width: 100%; height: 160px">
+(Native から受け取った結果を表示するエリア)</textarea
+      >
+
+      <h3>デバッグエリア</h3>
+      Native の実装状態を表示しています
+      <br />
+      <textarea id="js_id_log" style="width: 100%; height: 80vh"></textarea>
+    </div>
+
+    <script>
+      const isIOS = window.webkit != null
+      const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+      const OPN_BUNDLE_ID = "ooo.opn.ohsho-miniapp"
+
+      const sdk = window["gcp-miniapp-jssdk"]
+      sdk.init(OPN_BUNDLE_ID)
+
+      const stringify = (x) => {
+        return JSON.stringify(
+          x,
+          (k, v) => {
+            if (typeof v === "function") {
+              return v.toString()
+            }
+            return v
+          },
+          "  ",
+        )
+      }
+
+      const addLog = (text) => {
+        /** @type {HTMLTextAreaElement} */
+        const t = document.getElementById("js_id_log")
+        const prev = t.value
+        const next = `${prev}
+${text}`
+        t.value = next
+      }
+
+      // check
+      ;(() => {
+        if (isIOS) {
+          // iOS
+          if (window.webkit?.messageHandlers == null) {
+            addLog("window.webkit?.messageHandlers is null")
+          } else {
+            addLog(stringify(window.webkit))
+          }
+        } else {
+          // Android
+          addLog(stringify(window.GCPWebViewBridge))
+        }
+      })()
+
+      /**
+       * @returns {string} id - unique id
+       */
+      function getId() {
+        return `${Date.now()}-${Math.random().toFixed(5)}`
+      }
+
+      const pay = async () => {
+        // 有効なリクエストを作るため、(なるべく) 注文可能な未来日時をセットする
+        const takeoutTime = dayjs()
+          .add(1, "day")
+          .set("hour", 12)
+          .set("minute", 0)
+          .set("second", 0)
+          .format("YYYY-MM-DD HH:mm:ss")
+
+        const ooPurchaseData = {
+          // login-user-id: devuser884443
+          user_id: "892f088c-8259-43aa-8254-5a234ccb4e1a",
+          shop_id: 1,
+          items: [
+            {
+              toppings: 0,
+              productId: 97,
+              quantity: 2,
+            },
+            {
+              toppings: 0,
+              productId: 8000001,
+              quantity: 1,
+            },
+          ],
+          order: {
+            takeout_time: takeoutTime,
+          },
+        }
+
+        const t = document.getElementById("js_id_result_pay")
+        let result
+        try {
+          result = await sdk.processOrder({
+            amount: "245",
+            currency_code: "JPY",
+            purchase_data: ooPurchaseData,
+            twallet_shop_id: WALLET_SHOP_ID,
+          })
+        } catch (error) {
+          t.value = error.stack
+          return
+        }
+
+        console.log(result)
+        t.value = stringify(result)
+
+        // paymentID の自動入力
+        document.getElementById("js_id_cancel_payment_id").value =
+          result.payment_id
+      }
+
+      const cancel = async () => {
+        const paymentID = document.getElementById("js_id_cancel_payment_id")
+          .value
+
+        if (paymentID == null || paymentID.trim().length === 0) {
+          document.getElementById("js_id_result_cancel").value =
+            "PaymentID を入力してください"
+          document.getElementById("js_id_cancel_payment_id").value = ""
+          return
+        }
+
+        const t = document.getElementById("js_id_result_cancel")
+        let result
+        try {
+          result = await sdk.cancelOrder({
+            payment_id: paymentID,
+            twallet_shop_id: WALLET_SHOP_ID,
+          })
+        } catch (error) {
+          t.value = error.stack
+          return
+        }
+
+        console.log(result)
+        t.value = stringify(result)
+      }
+    </script>
+  </body>
+</html>
