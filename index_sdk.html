@@ -137,9 +137,9 @@ ${text}`
         try {
           result = await sdk.processOrder({
             amount: "245",
-            currency_code: "JPY",
-            purchase_data: ooPurchaseData,
-            twallet_shop_id: WALLET_SHOP_ID,
+            currencyCode: "JPY",
+            purchaseData: ooPurchaseData,
+            walletShopID: WALLET_SHOP_ID,
           })
         } catch (error) {
           t.value = error.stack
@@ -169,8 +169,8 @@ ${text}`
         let result
         try {
           result = await sdk.cancelOrder({
-            payment_id: paymentID,
-            twallet_shop_id: WALLET_SHOP_ID,
+            paymentID: paymentID,
+            walletShopID: WALLET_SHOP_ID,
           })
         } catch (error) {
           t.value = error.stack
