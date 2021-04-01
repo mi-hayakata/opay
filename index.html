@@ -137,7 +137,7 @@ ${text}`
             twallet_shop_id: WALLET_SHOP_ID,
             bundle_id: OPN_BUNDLE_ID,
           },
-          topic: "ProcessOrder",
+          topic: "ProcessPayment",
         })
       }
 
@@ -159,7 +159,7 @@ ${text}`
             twallet_shop_id: WALLET_SHOP_ID,
             bundle_id: OPN_BUNDLE_ID,
           },
-          topic: "CancelOrder",
+          topic: "CancelPayment",
         })
       }
 
@@ -182,7 +182,7 @@ ${text}`
         const cElm = document.getElementById("js_id_result_cancel")
 
         switch (detail?.topic) {
-          case "ProcessOrder":
+          case "ProcessPayment":
             pElm.value = stringify(detail)
 
             // paymentID の自動入力
@@ -191,7 +191,7 @@ ${text}`
 
             break
 
-          case "CancelOrder":
+          case "CancelPayment":
             cElm.value = stringify(detail)
             break
 
