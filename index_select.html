@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .main {
+        padding: 16px;
+      }
+
+      .select-root {
+        position: relative;
+        width: 100%;
+        background-color: white;
+        border: 1px solid lightgray;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .select-root::after {
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-top: 2px solid lightgray;
+        border-right: 2px solid lightgray;
+        transform: rotate(135deg) translateY(75%);
+      }
+      .select-main {
+        padding: 0 16px;
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        font-size: 16px;
+        color: navy;
+        background: transparent;
+        border: none;
+        outline: none;
+        appearance: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div style="padding-top: 8px">last updated: 2021-04-12 20:20</div>
+
+    <div class="main">
+      <h3>select box</h3>
+      <div class="select-root">
+        <select class="select-main">
+          <option value="o1">option 1</option>
+          <option value="o2">option 2</option>
+          <option value="o3">option 3</option>
+        </select>
+      </div>
+    </div>
+
+    <script>
+      const isIOS = window.webkit != null
+      const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+      const OPN_BUNDLE_ID = "ooo.opn.ohsho-miniapp"
+
+      const stringify = (x) => {
+        return JSON.stringify(
+          x,
+          (k, v) => {
+            if (typeof v === "function") {
+              return v.toString()
+            }
+            return v
+          },
+          "  ",
+        )
+      }
+
+      const addLog = (text) => {
+        /** @type {HTMLTextAreaElement} */
+        const t = document.getElementById("js_id_log")
+        const prev = t.value
+
+        let next = `${prev}
+---
+${text}`
+        if (prev.length === 0) {
+          next = text
+        }
+        t.value = next
+      }
+    </script>
+  </body>
+</html>
