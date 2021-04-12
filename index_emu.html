@@ -87,24 +87,26 @@ ${text}`
         return `${Date.now()}-${Math.random().toFixed(5)}`
       }
 
-      const createMessageToNativeBase = (topic) => {
-        return {
-          id: getId(),
-          topic,
-          message: { bundle_id: OPN_BUNDLE_ID },
-        }
-      }
-
       const showBackButton = (isShow) => {
-        const m = createMessageToNativeBase("ShowBackButton")
-        m.message.value = isShow
-        callSDK(m)
+        callSDK({
+          id: getId(),
+          topic: "ShowBackButton",
+          message: {
+            bundle_id: OPN_BUNDLE_ID,
+            value: isShow,
+          },
+        })
       }
 
       const openBrowser = (url) => {
-        const m = createMessageToNativeBase("OpenBrowser")
-        m.message.value = url
-        callSDK(m)
+        callSDK({
+          id: getId(),
+          topic: "OpenBrowser",
+          message: {
+            bundle_id: OPN_BUNDLE_ID,
+            value: url,
+          },
+        })
       }
 
       const callSDK = (payload) => {
