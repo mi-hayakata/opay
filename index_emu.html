@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+    <style>
+      .main {
+        padding: 16px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div style="padding-top: 8px">last updated: 2021-04-12 11:18</div>
+
+    <div class="main">
+      <h3>showBackButton</h3>
+      <button onclick="showBackButton(true)">戻るボタンを表示する</button>
+      <br />
+      <button onclick="showBackButton(false)">戻るボタンを非表示にする</button>
+
+      <h3>openBrowser (Android のみ)</h3>
+      <button onclick="openBrowser('https://example.com/')">
+        https://example.com/
+      </button>
+
+      <h3>デバッグエリア</h3>
+      Native の実装状態を表示しています
+      <br />
+      <textarea id="js_id_log" style="width: 100%; height: 80vh"></textarea>
+    </div>
+
+    <script>
+      const isIOS = window.webkit != null
+      const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+      const OPN_BUNDLE_ID = "ooo.opn.ohsho-miniapp"
+
+      const stringify = (x) => {
+        return JSON.stringify(
+          x,
+          (k, v) => {
+            if (typeof v === "function") {
+              return v.toString()
+            }
+            return v
+          },
+          "  ",
+        )
+      }
+
+      const addLog = (text) => {
+        /** @type {HTMLTextAreaElement} */
+        const t = document.getElementById("js_id_log")
+        const prev = t.value
+
+        let next = `${prev}
+---
+${text}`
+        if (prev.length === 0) {
+          next = text
+        }
+        t.value = next
+      }
+
+      // check
+      ;(() => {
+        if (isIOS) {
+          // iOS
+          if (window.webkit?.messageHandlers == null) {
+            addLog("window.webkit?.messageHandlers is null")
+          } else {
+            addLog(stringify(window.webkit))
+          }
+        } else {
+          // Android
+          addLog(stringify(window.GCPWebViewBridge))
+        }
+      })()
+
+      /**
+       * @returns {string} id - unique id
+       */
+      function getId() {
+        return `${Date.now()}-${Math.random().toFixed(5)}`
+      }
+
+      const createMessageToNativeBase = (topic) => {
+        return {
+          id: getId(),
+          topic,
+          message: { bundle_id: OPN_BUNDLE_ID },
+        }
+      }
+
+      const showBackButton = (isShow) => {
+        const m = createMessageToNativeBase("ShowBackButton")
+        m.message.value = isShow
+        callSDK(m)
+      }
+
+      const openBrowser = (url) => {
+        const m = createMessageToNativeBase("OpenBrowser")
+        m.message.value = url
+        callSDK(m)
+      }
+
+      const callSDK = (payload) => {
+        console.log(payload)
+        if (isIOS) {
+          window.webkit.messageHandlers.GCPWebViewBridge.postMessage(payload)
+        } else {
+          window.GCPWebViewBridge.postMessage(JSON.stringify(payload))
+        }
+      }
+    </script>
+  </body>
+</html>
