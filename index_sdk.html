@@ -11,6 +11,12 @@
       .main {
         padding: 16px;
       }
+
+      .debug_log {
+        font-family: monospace;
+        height: auto;
+        width: 100%;
+      }
     </style>
   </head>
 
@@ -20,9 +26,11 @@
       <a href="./index.html">mock 版へ切り替える</a>
     </div>
 
-    <div style="padding-top: 8px">last updated: 2021-03-24 11:20</div>
+    <div style="padding-top: 8px">last updated: 2021-04-26 19:26</div>
 
     <div class="main">
+      <textarea id="js_debug_log" class="debug_log"></textarea>
+
       <h3>決済</h3>
       <button onclick="pay()">245円支払うボタン</button>
       <textarea id="js_id_result_pay" style="width: 100%; height: 160px">
@@ -39,7 +47,9 @@
           onfocus="this.select()"
         />
       </div>
-      <button onclick="cancel()">キャンセル</button>
+      <button disabled onclick="cancel()">
+        キャンセル (今動作しないため無効化しています)
+      </button>
       <textarea id="js_id_result_cancel" style="width: 100%; height: 160px">
 (Native から受け取った結果を表示するエリア)</textarea
       >
@@ -135,7 +145,7 @@ ${text}`
         const t = document.getElementById("js_id_result_pay")
         let result
         try {
-          result = await sdk.processOrder({
+          result = await sdk.processPayment({
             amount: "245",
             currencyCode: "JPY",
             purchaseData: ooPurchaseData,
@@ -168,7 +178,7 @@ ${text}`
         const t = document.getElementById("js_id_result_cancel")
         let result
         try {
-          result = await sdk.cancelOrder({
+          result = await sdk.cancelPayment({
             paymentID: paymentID,
             walletShopID: WALLET_SHOP_ID,
           })
