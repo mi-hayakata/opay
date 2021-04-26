@@ -26,7 +26,7 @@
       <a href="./index.html">mock 版へ切り替える</a>
     </div>
 
-    <div style="padding-top: 8px">last updated: 2021-04-26 19:44</div>
+    <div style="padding-top: 8px">last updated: 2021-04-26 20:06</div>
 
     <div class="main">
       <textarea id="js_debug_log" class="debug_log"></textarea>
@@ -98,6 +98,18 @@ ${text}`
             addLog("window.webkit?.messageHandlers is null")
           } else {
             addLog(stringify(window.webkit))
+          }
+
+          if (window.dispatchEvent == null) {
+            addLog(`window.dispatchEvent is null`)
+          } else {
+            addLog(stringify(window.dispatchEvent))
+          }
+
+          if (window.dispatchEvent == null) {
+            addLog(`window.addEventListener is null`)
+          } else {
+            addLog(stringify(window.addEventListener))
           }
         } else {
           // Android
