@@ -101,7 +101,7 @@
         return `${h}:${m}:${s}.${ms}`
       }
       const addDebugLog = (_text) => {
-        const text = `[${format(new Date())}]: (SDK) ${String(_text)}`
+        const text = `[${format(new Date())}]: ${String(_text)}`
 
         // eslint-disable-next-line unicorn/prefer-query-selector
         const t = document.getElementById("js_debug_log")
