@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+    <script src="./scripts/index.umd.js"></script>
+    <style>
+      .main {
+        padding: 16px;
+      }
+
+      .debug_log {
+        font-family: monospace;
+        height: auto;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>JS SDK版 (必ずエラー)</h2>
+
+    <div style="padding-top: 8px">last updated: 2021-05-21 17:15</div>
+
+    <div class="main">
+      <h3>決済</h3>
+      <button onclick="pay()">支払うとエラーになるボタン</button>
+      <textarea id="js_id_result_pay" style="width: 100%; height: 160px">
+(Native から受け取った結果を表示するエリア)</textarea
+      >
+
+      <h3>デバッグエリア</h3>
+      Native の実装状態と、処理のログを表示しています
+      <br />
+      <textarea id="js_debug_log" style="width: 100%"></textarea>
+    </div>
+
+    <script>
+      const isIOS = window.webkit != null
+      const WALLET_SHOP_ID = "000000000000000000000000000000000000014"
+      const OPN_BUNDLE_ID = "ooo.opn.ohsho-miniapp"
+
+      const sdk = window["gcp-miniapp-jssdk"]
+      sdk.init(OPN_BUNDLE_ID)
+
+      const stringify = (x) => {
+        return JSON.stringify(
+          x,
+          (k, v) => {
+            if (typeof v === "function") {
+              return v.toString()
+            }
+            return v
+          },
+          "  ",
+        )
+      }
+
+      /**
+       * @param {Date} d date
+       * @returns {string} a
+       */
+      const format = (d) => {
+        const h = String(d.getHours()).padStart(2, "0")
+        const m = String(d.getMinutes()).padStart(2, "0")
+        const s = String(d.getSeconds()).padStart(2, "0")
+        const ms = String(d.getMilliseconds()).padStart(3, "0")
+        return `${h}:${m}:${s}.${ms}`
+      }
+
+      const addDebugLog = (_text) => {
+        const text = `[${format(new Date())}]: (JS) ${String(_text)}`
+
+        // eslint-disable-next-line unicorn/prefer-query-selector
+        const t = document.getElementById("js_debug_log")
+        // eslint-disable-next-line unicorn/no-null
+        if (t == null) {
+          return
+        }
+        const prev = t.value
+
+        let next = `${prev}
+${text}`
+        if (prev.length === 0) {
+          next = text
+        }
+        t.value = next
+
+        // resize
+        t.style.height = `${t.clientHeight}px`
+        t.style.height = `${t.scrollHeight}px`
+      }
+
+      // check
+      ;(() => {
+        if (isIOS) {
+          // iOS
+          if (window.webkit?.messageHandlers == null) {
+            addDebugLog("window.webkit?.messageHandlers is null")
+          } else {
+            addDebugLog(stringify(window.webkit))
+          }
+
+          if (window.dispatchEvent == null) {
+            addDebugLog(`window.dispatchEvent is null`)
+          } else {
+            addDebugLog(stringify(window.dispatchEvent))
+          }
+
+          if (window.dispatchEvent == null) {
+            addDebugLog(`window.addEventListener is null`)
+          } else {
+            addDebugLog(stringify(window.addEventListener))
+          }
+        } else {
+          // Android
+          addDebugLog(stringify(window.GCPWebViewBridge))
+        }
+      })()
+
+      /**
+       * @returns {string} id - unique id
+       */
+      function getId() {
+        return `${Date.now()}-${Math.random().toFixed(5)}`
+      }
+
+      const pay = async () => {
+        // 有効なリクエストを作るため、(なるべく) 注文可能な未来日時をセットする
+        // const takeoutTime = dayjs()
+        //   .add(1, "day")
+        //   .set("hour", 12)
+        //   .set("minute", 0)
+        //   .set("second", 0)
+        //   .format("YYYY-MM-DD HH:mm:ss")
+
+        const ooPurchaseData = {
+          user_id: "",
+          shop_id: 0,
+          items: [],
+          order: {
+            takeout_time: "",
+          },
+        }
+
+        const t = document.getElementById("js_id_result_pay")
+        let result
+        try {
+          result = await sdk.processPayment({
+            amount: "245",
+            currencyCode: "JPY",
+            purchaseData: ooPurchaseData,
+            walletShopID: WALLET_SHOP_ID,
+          })
+        } catch (error) {
+          t.value = error.stack
+          return
+        }
+
+        t.value = stringify(result)
+      }
+    </script>
+  </body>
+</html>
