@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .main {
+        padding: 16px;
+      }
+
+      .linkLike {
+        color: -webkit-link;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>open link test</h2>
+
+    <div style="padding-top: 8px">last updated: 2021-06-14 11:30</div>
+
+    <div class="main">
+      <h3>リンクを開く</h3>
+
+      <h4>case 1</h4>
+      <a
+        href="https://www.google.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Googleを開く
+      </a>
+
+      <h4>case 2</h4>
+      <span onclick="onOpen('https://www.google.com/')" class="linkLike">
+        Googleを開く
+      </span>
+    </div>
+
+    <script>
+      const onOpen = (url) => {
+        window.open(url)
+      }
+    </script>
+  </body>
+</html>
