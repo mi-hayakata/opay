@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <title>Document</title>
+
+    <style>
+      html {
+        border: solid red 4px;
+        background-color: darkgrey;
+      }
+
+      .c1 {
+        height: 500px;
+        background-color: pink;
+      }
+
+      .c2 {
+        height: 500px;
+        background-color: skyblue;
+      }
+
+      .footer {
+        border-top: 1px solid lightgray;
+        width: 100%;
+        padding: 15px 42px 26px 42px;
+        background-color: white;
+        display: flex;
+        justify-content: space-between;
+        position: fixed;
+        bottom: 0;
+      }
+
+      .status_area {
+        box-shadow: 4px 4px darkslategrey;
+        position: fixed;
+        top: 80px;
+        right: 10px;
+        background-color: silver;
+        padding: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2 style="margin: 0; padding: 0">height test</h2>
+
+    <div style="padding-top: 8px">最終更新日時: 2021-06-26 19:28</div>
+
+    <div style="padding: 16px">
+      <button onclick="toggleFooter()">Footer 表示の切り替え</button>
+    </div>
+
+    <div class="c1">スクロールを発生させるための詰めコンテンツ 1</div>
+    <div class="c2">スクロールを発生させるための詰めコンテンツ 2</div>
+
+    <div style="padding: 16px 16px 64px 16px">
+      <button onclick="toggleFooter()">Footer 表示の切り替え</button>
+    </div>
+
+    <div id="id_footer" class="footer">固定 Footer</div>
+
+    <div class="status_area">
+      <div style="padding-bottom: 8px">
+        JavaScriptで取得した画面の高さ
+        <br />
+        (scroll毎に更新)
+      </div>
+      <hr />
+      <div>
+        <span>window.innerHeight: </span>
+        <span id="innerHeightView"></span>
+      </div>
+      <div>
+        <span>window.outerHeight: </span>
+        <span id="outerHeightView"></span>
+      </div>
+    </div>
+
+    <script>
+      // init
+      document.getElementById("innerHeightView").textContent =
+        window.innerHeight
+      document.getElementById("outerHeightView").textContent =
+        window.outerHeight
+
+      // on scroll event
+      window.document.addEventListener("scroll", () => {
+        document.getElementById("innerHeightView").textContent =
+          window.innerHeight
+        document.getElementById("outerHeightView").textContent =
+          window.outerHeight
+      })
+
+      const toggleFooter = () => {
+        const f = document.getElementById("id_footer")
+        if (f.style.length === 0) {
+          f.style = "display: none;"
+        } else {
+          f.style = ""
+        }
+      }
+    </script>
+  </body>
+</html>
