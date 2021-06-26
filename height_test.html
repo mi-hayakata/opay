@@ -24,19 +24,49 @@
         height: 600px;
         background-color: skyblue;
       }
+
+      .status_area {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: silver;
+        padding: 8px;
+      }
     </style>
   </head>
 
   <body>
-    <h2>height test</h2>
+    <h2 style="padding-top: 64px">height test</h2>
 
     <div style="padding-top: 8px">last updated: 2021-06-26 18:18</div>
 
     <div class="c1">content 1</div>
     <div class="c2">content 2</div>
 
+    <div class="status_area">
+      <div>
+        <span>window.innerHeight: </span>
+        <span id="innerHeightView"></span>
+      </div>
+      <div>
+        <span>window.outerHeight: </span>
+        <span id="outerHeightView"></span>
+      </div>
+    </div>
     <script>
-      console.log("hello")
+      // init
+      document.getElementById("innerHeightView").textContent =
+        window.innerHeight
+      document.getElementById("outerHeightView").textContent =
+        window.outerHeight
+
+      // on scroll event
+      window.document.addEventListener("scroll", () => {
+        document.getElementById("innerHeightView").textContent =
+          window.innerHeight
+        document.getElementById("outerHeightView").textContent =
+          window.outerHeight
+      })
     </script>
   </body>
 </html>
