@@ -13,7 +13,7 @@
     <style>
       html {
         border: solid red 4px;
-        background-color: silver;
+        background-color: darkgrey;
       }
 
       .c1 {
@@ -51,22 +51,28 @@
   <body>
     <h2 style="margin: 0; padding: 0">height test</h2>
 
-    <div style="padding-top: 8px">last updated: 2021-06-26 18:18</div>
+    <div style="padding-top: 8px">最終更新日時: 2021-06-26 19:28</div>
 
     <div style="padding: 16px">
-      <button onclick="toggleFooter()">Toggle footer</button>
+      <button onclick="toggleFooter()">Footer 表示の切り替え</button>
     </div>
 
-    <div class="c1">content 1</div>
-    <div class="c2">content 2</div>
+    <div class="c1">スクロールを発生させるための詰めコンテンツ 1</div>
+    <div class="c2">スクロールを発生させるための詰めコンテンツ 2</div>
 
     <div style="padding: 16px 16px 64px 16px">
-      <button onclick="toggleFooter()">Toggle footer</button>
+      <button onclick="toggleFooter()">Footer 表示の切り替え</button>
     </div>
 
-    <div id="id_footer" class="footer">Fixed Footer</div>
+    <div id="id_footer" class="footer">固定 Footer</div>
 
     <div class="status_area">
+      <div style="padding-bottom: 8px">
+        JavaScriptで取得した画面の高さ
+        <br />
+        (scroll毎に更新)
+      </div>
+      <hr />
       <div>
         <span>window.innerHeight: </span>
         <span id="innerHeightView"></span>
