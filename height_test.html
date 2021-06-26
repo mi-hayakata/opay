@@ -16,13 +16,24 @@
       }
 
       .c1 {
-        height: 600px;
+        height: 500px;
         background-color: pink;
       }
 
       .c2 {
-        height: 600px;
+        height: 500px;
         background-color: skyblue;
+      }
+
+      .footer {
+        border-top: 1px solid lightgray;
+        width: 100%;
+        padding: 15px 42px 26px 42px;
+        background-color: white;
+        display: flex;
+        justify-content: space-between;
+        position: fixed;
+        bottom: 0;
       }
 
       .status_area {
@@ -41,8 +52,18 @@
 
     <div style="padding-top: 8px">last updated: 2021-06-26 18:18</div>
 
+    <div style="padding: 16px">
+      <button onclick="toggleFooter()">Toggle footer</button>
+    </div>
+
     <div class="c1">content 1</div>
     <div class="c2">content 2</div>
+
+    <div style="padding: 16px 16px 64px 16px">
+      <button onclick="toggleFooter()">Toggle footer</button>
+    </div>
+
+    <div id="id_footer" class="footer">Fixed Footer</div>
 
     <div class="status_area">
       <div>
@@ -54,6 +75,7 @@
         <span id="outerHeightView"></span>
       </div>
     </div>
+
     <script>
       // init
       document.getElementById("innerHeightView").textContent =
@@ -68,6 +90,15 @@
         document.getElementById("outerHeightView").textContent =
           window.outerHeight
       })
+
+      const toggleFooter = () => {
+        const f = document.getElementById("id_footer")
+        if (f.style.length === 0) {
+          f.style = "display: none;"
+        } else {
+          f.style = ""
+        }
+      }
     </script>
   </body>
 </html>
